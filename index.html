@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#04060c" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23020617'/%3E%3Ctext x='32' y='45' font-family='Arial,Helvetica,sans-serif' font-size='40' font-weight='900' fill='%23ffffff' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E" />
+    <title>REMO PRO - نظام ERP متكامل لإدارة الأعمال</title>
+    <meta name="description" content="منصة REMO PRO السحابية المتكاملة لربط العمليات والمبيعات والمخزون والإدارة المالية والموارد البشرية في نظام واحد متماسك." />
+    <meta property="og:title" content="REMO PRO - نظام ERP متكامل لإدارة الأعمال" />
+    <meta property="og:description" content="منصة REMO PRO السحابية المتكاملة لربط العمليات والمبيعات والمخزون والإدارة المالية والموارد البشرية في نظام واحد متماسك." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      /* First-paint shell: keeps the screen dark until the intro film is ready */
+      #boot-screen {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        background:
+          radial-gradient(60% 60% at 50% 40%, rgba(37, 99, 235, 0.22), transparent 70%),
+          #04060c;
+        color: #e2e8f0;
+        font-family: 'Cairo', 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        z-index: 130;
+      }
+      #boot-screen .boot-mark {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        font-size: 20px;
+      }
+      #boot-screen .boot-tile {
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        font-size: 20px;
+        font-weight: 900;
+      }
+      #boot-screen .boot-pro { color: #60a5fa; }
+      #boot-screen .boot-bar {
+        width: 132px;
+        height: 2px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.12);
+      }
+      #boot-screen .boot-bar span {
+        display: block;
+        width: 45%;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, transparent, #60a5fa, transparent);
+        animation: bootSlide 1.3s ease-in-out infinite;
+      }
+      #boot-screen .boot-caption {
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(226, 232, 240, 0.5);
+      }
+      @keyframes bootSlide {
+        0% { transform: translateX(-120%); }
+        100% { transform: translateX(320%); }
+      }
+    </style>
+    <script>
+      (function () {
+        var lang = 'ar';
+        try {
+          var fromUrl = new URLSearchParams(window.location.search).get('lang');
+          if (fromUrl === 'ar' || fromUrl === 'en') {
+            lang = fromUrl;
+          } else {
+            var stored = window.localStorage.getItem('remopro.lang');
+            if (stored === 'ar' || stored === 'en') lang = stored;
+          }
+        } catch (error) {
+          /* keep Arabic as the default */
+        }
+        document.documentElement.setAttribute('lang', lang);
+        document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+      })();
+    </script>
+  </head>
+  <body class="bg-slate-50 text-slate-900 antialiased selection:bg-blue-600 selection:text-white">
+    <div id="root">
+      <div id="boot-screen" aria-hidden="true">
+        <div class="boot-mark">
+          <span class="boot-tile">R</span>
+          <span>REMO <span class="boot-pro">PRO</span></span>
+        </div>
+        <div class="boot-bar"><span></span></div>
+        <div class="boot-caption" id="boot-caption">جارٍ تحضير التجربة</div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var caption = document.getElementById('boot-caption');
+        if (caption && document.documentElement.lang === 'en') {
+          caption.textContent = 'Preparing your experience';
+        }
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

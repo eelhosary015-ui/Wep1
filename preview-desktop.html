@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ar" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Desktop preview</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #1b2233;
+        direction: ltr;
+      }
+      #stage {
+        position: relative;
+        overflow: hidden;
+      }
+      #stage iframe {
+        position: absolute;
+        top: 0;
+        width: 1440px;
+        height: 900px;
+        border: 0;
+        transform-origin: top left;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage"></div>
+    <script>
+      const params = new URLSearchParams(location.search);
+      const scale = parseFloat(params.get('s') || '0.5');
+      const dx = parseFloat(params.get('dx') || '0');
+      const dy = parseFloat(params.get('dy') || '0');
+      const lang = params.get('lang') || 'ar';
+      const stage = document.getElementById('stage');
+      stage.style.width = Math.round(1440 * scale) + 'px';
+      stage.style.height = Math.round(900 * scale) + 'px';
+      const frame = document.createElement('iframe');
+      frame.src = 'http://localhost:5199/?intro=0&lang=' + lang;
+      frame.style.left = dx + 'px';
+      frame.style.top = dy + 'px';
+      frame.style.transform = 'scale(' + scale + ')';
+      stage.appendChild(frame);
+    </script>
+  </body>
+</html>

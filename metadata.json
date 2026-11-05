@@ -1,0 +1,6 @@
+{
+  "name": "REMO PRO - نظام ERP متكامل لإدارة الأعمال",
+  "description": "منصة REMO PRO السحابية المتكاملة لربط العمليات والمبيعات والمخزون والإدارة المالية والموارد البشرية في نظام واحد متماسك.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

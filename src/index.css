@@ -1,0 +1,309 @@
+@import "tailwindcss";
+
+@theme {
+  /* خط اليد المستخدم في ملاحظة البانر */
+  --font-hand: 'Aref Ruqaa', 'Cairo', serif;
+}
+
+:root {
+  /* ارتفاع القائمة العلوية العائمة (يمتد البانر خلفها) */
+  --nav-h: 62px;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --nav-h: 74px;
+  }
+}
+
+@layer base {
+  html {
+    font-family: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  /* Latin typography for the English version of the site */
+  html[lang='en'] {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+      sans-serif;
+  }
+
+  html[lang='en'] body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+      sans-serif;
+    letter-spacing: -0.005em;
+  }
+
+  body {
+    font-family: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+/* Tabular numbers for financial and metric displays */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Force LTR for phone numbers and e-mail addresses inside RTL layouts */
+.dir-ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+}
+
+/* ------------------------------------------------------------------ */
+/* Hero banner (REMO PRO ERP)                                          */
+/* ------------------------------------------------------------------ */
+
+/* الغلاف الأزرق المتدرّج أعلى صورة المكتب */
+.hero-wash {
+  background-image: linear-gradient(
+    to left,
+    #001b4e 0%,
+    #001b4e 32%,
+    rgba(0, 26, 73, 0.95) 43%,
+    rgba(0, 24, 68, 0.76) 53%,
+    rgba(0, 22, 62, 0.36) 64%,
+    rgba(0, 20, 58, 0) 76%
+  );
+}
+
+html[dir='ltr'] .hero-wash {
+  background-image: linear-gradient(
+    to right,
+    #001b4e 0%,
+    #001b4e 32%,
+    rgba(0, 26, 73, 0.95) 43%,
+    rgba(0, 24, 68, 0.76) 53%,
+    rgba(0, 22, 62, 0.36) 64%,
+    rgba(0, 20, 58, 0) 76%
+  );
+}
+
+/* أشعة قطرية ناعمة كما في البانر الأصلي */
+.hero-rays {
+  background-image: repeating-linear-gradient(
+      112deg,
+      rgba(150, 205, 255, 0.075) 0 1.5px,
+      rgba(150, 205, 255, 0) 1.5px 54px
+    ),
+    repeating-linear-gradient(
+      112deg,
+      rgba(37, 120, 235, 0.13) 0 18px,
+      rgba(37, 120, 235, 0) 18px 190px
+    );
+  mix-blend-mode: screen;
+}
+
+/* فاصل رأسي بين مزايا البانر (يظهر فقط عندما تكون المزايا في سطر واحد) */
+@media (min-width: 1024px) {
+  .hero-feature + .hero-feature {
+    border-inline-start: 1px solid rgba(255, 255, 255, 0.16);
+    padding-inline-start: 1.1rem;
+  }
+}
+
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-rise {
+  animation: heroRise 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-note {
+  animation: heroRise 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 420ms;
+}
+
+/* على الشاشات الصغيرة يغطي النص الصورة بالكامل لضمان وضوح القراءة */
+@media (max-width: 1023px) {
+  .hero-wash,
+  html[dir='ltr'] .hero-wash {
+    background-image: linear-gradient(
+      to bottom,
+      rgba(0, 15, 46, 0.9) 0%,
+      rgba(0, 17, 52, 0.86) 45%,
+      rgba(0, 18, 55, 0.96) 76%,
+      #001b4e 100%
+    );
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Existing UI motion                                                  */
+/* ------------------------------------------------------------------ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 260ms ease-out both;
+}
+
+/* ------------------------------------------------------------------ */
+/* Intro film                                                          */
+/* ------------------------------------------------------------------ */
+
+.intro-overlay {
+  overscroll-behavior: none;
+  will-change: clip-path, opacity;
+}
+
+@keyframes introFilmIn {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.intro-film {
+  filter: saturate(1.06) contrast(1.04);
+  animation: introFilmIn 1400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* On portrait phones the film is masked into the ambient background */
+@media (max-width: 639px) {
+  .intro-film {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      #000 9%,
+      #000 91%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  }
+}
+
+/* Fine film grain, hides upscaling artefacts on large screens */
+.intro-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+@keyframes introEqualizer {
+  0%,
+  100% {
+    height: 8px;
+    opacity: 0.45;
+  }
+  50% {
+    height: 26px;
+    opacity: 1;
+  }
+}
+
+.intro-equalizer {
+  height: 8px;
+  animation: introEqualizer 900ms ease-in-out infinite;
+}
+
+@keyframes introRing {
+  0% {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  35% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.16);
+    opacity: 0;
+  }
+}
+
+.intro-ring {
+  animation: introRing 2.6s ease-out infinite;
+}
+
+@keyframes introLine {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.intro-line {
+  animation: introLine 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes introDot {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+.intro-dot {
+  animation: introDot 1.4s ease-in-out infinite;
+}
+
+/* The overlay opens vertically like a curtain to reveal the site */
+@keyframes introCurtain {
+  0% {
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    clip-path: inset(50% 0 50% 0);
+  }
+}
+
+.intro-exit {
+  animation: introCurtain 900ms cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-exit {
+    animation: fadeOutIntro 450ms ease forwards;
+  }
+
+  @keyframes fadeOutIntro {
+    to {
+      opacity: 0;
+    }
+  }
+}

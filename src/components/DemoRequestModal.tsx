@@ -1,0 +1,325 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import { X, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { DemoFormData } from '../types';
+import { createWhatsAppDemoLink } from '../utils/whatsapp';
+import { WhatsAppIcon } from './WhatsAppIcon';
+import { submitDemoRequestToEmail } from '../utils/formSubmit';
+import { SITE_CONFIG } from '../config/siteConfig';
+import { useI18n } from '../i18n/LanguageContext';
+import { RichText } from '../i18n/RichText';
+
+interface DemoRequestModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  initialSector?: string;
+}
+
+export const DemoRequestModal: React.FC<DemoRequestModalProps> = ({
+  isOpen,
+  onClose,
+  initialSector
+}) => {
+  const { t, lang } = useI18n();
+  const copy = t.demoModal;
+
+  const sectorOptions = useMemo(() => {
+    const base = [...copy.sectorOptions];
+    if (initialSector && !base.includes(initialSector)) {
+      return [initialSector, ...base];
+    }
+    return base;
+  }, [copy.sectorOptions, initialSector]);
+
+  const [formData, setFormData] = useState<DemoFormData>({
+    fullName: '',
+    companyName: '',
+    phone: '',
+    email: '',
+    sector: initialSector || copy.sectorOptions[0],
+    branchCount: copy.branchOptions[0],
+    notes: ''
+  });
+
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>('');
+
+  useEffect(() => {
+    if (initialSector) {
+      setFormData(prev => ({ ...prev, sector: initialSector }));
+    }
+  }, [initialSector]);
+
+  useEffect(() => {
+    setFormData((previous) => ({
+      ...previous,
+      sector: sectorOptions.includes(previous.sector) ? previous.sector : sectorOptions[0],
+      branchCount: copy.branchOptions.includes(previous.branchCount)
+        ? previous.branchCount
+        : copy.branchOptions[0],
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
+
+  /* Lock background scrolling while the dialog is open. */
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg('');
+
+    if (!formData.fullName.trim()) {
+      setErrorMsg(copy.errors.name);
+      return;
+    }
+    if (!formData.companyName.trim()) {
+      setErrorMsg(copy.errors.company);
+      return;
+    }
+    if (!formData.phone.trim() || formData.phone.length < 8) {
+      setErrorMsg(copy.errors.phone);
+      return;
+    }
+    if (!formData.email.trim() || !formData.email.includes('@')) {
+      setErrorMsg(copy.errors.email);
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      await submitDemoRequestToEmail(formData);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+      setIsSubmitted(true);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[110] overflow-y-auto bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="relative bg-white rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 animate-fadeIn">
+
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute end-4 top-4 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
+          aria-label={copy.close}
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {isSubmitted ? (
+          <div className="text-center py-8 space-y-4">
+            <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto">
+              <CheckCircle2 className="w-8 h-8" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900">
+              {copy.successTitle}
+            </h3>
+            <p className="text-sm text-slate-600 leading-relaxed max-w-md mx-auto">
+              <RichText
+                text={copy.successBody}
+                values={{
+                  company: formData.companyName,
+                  email: SITE_CONFIG.contact.email,
+                  sector: formData.sector,
+                }}
+              />
+            </p>
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <a
+                href={createWhatsAppDemoLink(formData, lang)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto px-4 py-2.5 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-300 rounded-lg hover:bg-emerald-100 transition-colors flex items-center justify-center gap-1.5"
+              >
+                <WhatsAppIcon className="w-4 h-4 text-emerald-600" />
+                <span>{copy.successWhatsapp}</span>
+              </a>
+
+              <button
+                onClick={onClose}
+                className="w-full sm:w-auto px-6 py-2.5 text-xs font-bold text-white bg-slate-900 rounded-lg hover:bg-slate-800 transition-colors"
+              >
+                {copy.closeBtn}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div className="mb-6 text-start pe-8">
+              <span className="text-xs font-bold text-blue-700 block mb-1">{copy.eyebrow}</span>
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900">
+                {copy.title}
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 mt-1">
+                {copy.desc}
+              </p>
+            </div>
+
+            {errorMsg && (
+              <div className="mb-4 p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-xs font-semibold">
+                {errorMsg}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4 text-start">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 mb-1.5">
+                    {copy.labels.fullName} *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    placeholder={copy.placeholders.fullName}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 mb-1.5">
+                    {copy.labels.company} *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.companyName}
+                    onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
+                    placeholder={copy.placeholders.company}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 mb-1.5">
+                    {copy.labels.phone} *
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    dir="ltr"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    placeholder={copy.placeholders.phone}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 mb-1.5">
+                    {copy.labels.email} *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    dir="ltr"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder={copy.placeholders.email}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 mb-1.5">
+                    {copy.labels.sector}
+                  </label>
+                  <select
+                    value={formData.sector}
+                    onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 cursor-pointer"
+                  >
+                    {sectorOptions.map((sector) => (
+                      <option key={sector} value={sector}>{sector}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 mb-1.5">
+                    {copy.labels.branches}
+                  </label>
+                  <select
+                    value={formData.branchCount}
+                    onChange={(e) => setFormData({ ...formData, branchCount: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 cursor-pointer"
+                  >
+                    {copy.branchOptions.map((branch) => (
+                      <option key={branch} value={branch}>{branch}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-800 mb-1.5">
+                  {copy.labels.notes}
+                </label>
+                <textarea
+                  rows={2}
+                  value={formData.notes}
+                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  placeholder={copy.placeholders.notes}
+                  className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2 text-sm text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 resize-none"
+                />
+              </div>
+
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span className="text-[11px] text-slate-600 hidden sm:block flex-1 min-w-0 leading-snug me-3">
+                  {copy.privacyNote}
+                </span>
+
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0">
+                  <a
+                    href={createWhatsAppDemoLink(formData, lang)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 sm:flex-none px-4 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 rounded-lg transition-colors flex items-center justify-center gap-1.5 whitespace-nowrap"
+                  >
+                    <WhatsAppIcon className="w-4 h-4" />
+                    <span>{copy.whatsappSend}</span>
+                  </a>
+
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="flex-1 sm:flex-none px-5 py-2.5 text-xs font-bold text-white bg-blue-700 hover:bg-blue-800 disabled:opacity-50 rounded-lg transition-colors flex items-center justify-center gap-1.5 shrink-0 whitespace-nowrap"
+                  >
+                    {isLoading ? copy.submitting : copy.submit}
+                    <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180" />
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+};
