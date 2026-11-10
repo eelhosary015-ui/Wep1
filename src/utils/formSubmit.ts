@@ -4,44 +4,59 @@ import { SITE_CONFIG } from '../config/siteConfig';
 /**
  * دالة مساعدة لإرسال إشعار فوري منسق إلى بوت التليجرام
  */
-async function sendToTelegramBot(formData: DemoFormData): Promise<void> {
+async function sendToTelegramBot(formData: DemoFormData): Promise<boolean> {
   const { botToken, targetChatId } = SITE_CONFIG.telegram;
-  if (!botToken) return;
+  if (!botToken) return false;
 
   try {
     const chatIds: string[] = [];
 
-    // إذا كان هناك Chat ID محدد يدوياً نستخدمه
+    // 1. إذا كان هناك Chat ID محدد يدوياً في siteConfig
     if (targetChatId && targetChatId.trim()) {
       chatIds.push(targetChatId.trim());
     }
 
-    // جلب المحادثات النشطة مع البوت تلقائياً عبر getUpdates (لكل من ضغط /start أو أضاف البوت لجروب)
+    // 2. إذا كان هناك Chat ID تم تخزينه مسبقاً في المتصفح
     try {
-      const updatesRes = await fetch(`https://api.telegram.org/bot${botToken}/getUpdates?limit=15`, {
+      const savedChatId = localStorage.getItem('remo_telegram_chat_id');
+      if (savedChatId && !chatIds.includes(savedChatId)) {
+        chatIds.push(savedChatId);
+      }
+    } catch {
+      // ignore
+    }
+
+    // 3. محاولة جلب آخر محادثة تفاعلت مع البوت عبر getUpdates
+    try {
+      const updatesRes = await fetch(`https://api.telegram.org/bot${botToken}/getUpdates`, {
         signal: AbortSignal.timeout(5000),
       });
       if (updatesRes.ok) {
         const data = await updatesRes.json();
         if (data.ok && Array.isArray(data.result)) {
           for (const item of data.result) {
-            const chat = item?.message?.chat || item?.my_chat_member?.chat;
+            const chat = item?.message?.chat || item?.my_chat_member?.chat || item?.channel_post?.chat;
             if (chat?.id) {
               const idStr = String(chat.id);
               if (!chatIds.includes(idStr)) {
                 chatIds.push(idStr);
+                try {
+                  localStorage.setItem('remo_telegram_chat_id', idStr);
+                } catch {
+                  // ignore
+                }
               }
             }
           }
         }
       }
-    } catch {
-      // تجاهل إذا تعذر جلب التحديثات
+    } catch (e) {
+      console.warn('Telegram getUpdates check failed:', e);
     }
 
     if (chatIds.length === 0) {
-      console.info('Telegram: لا يوجد Chat ID مسجل بعد. يرجى إرسال /start للبوت @' + SITE_CONFIG.telegram.botUsername);
-      return;
+      console.warn('⚠️ تليجرام: لم يتم العثور على أي Chat ID بعد. لكي تصلك الرسائل، افتح البوت @REMOpro_Bot واضغط /start أو أرسل له أي رسالة.');
+      return false;
     }
 
     const now = new Date().toLocaleString('ar-EG', { dateStyle: 'full', timeStyle: 'short' });
@@ -88,8 +103,10 @@ async function sendToTelegramBot(formData: DemoFormData): Promise<void> {
         }
       })
     );
+    return true;
   } catch (err) {
     console.error('Telegram notification error:', err);
+    return false;
   }
 }
 
