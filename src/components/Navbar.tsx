@@ -81,13 +81,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDemo }) => {
         </nav>
 
         {/* اللغة + زر البدء */}
-        <div className="flex shrink-0 items-center gap-2 sm:gap-2.5">
-          <LanguageToggle className="hidden sm:inline-flex" />
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
+          <LanguageToggle className="inline-flex py-1.5 px-2.5 text-xs sm:text-[12.5px]" compact />
 
           <button
             type="button"
             onClick={() => onOpenDemo()}
-            className="hidden items-center gap-2 rounded-full bg-[#0E2350] px-4 py-2 text-[12.5px] font-bold text-white shadow-[0_10px_22px_-12px_rgba(9,26,66,0.9)] transition-colors hover:bg-[#17316B] sm:inline-flex lg:px-5 lg:text-[13px]"
+            className="hidden items-center gap-2 rounded-full bg-[#0E2350] px-4 py-2 text-[12.5px] font-bold text-white shadow-[0_10px_22px_-12px_rgba(9,26,66,0.9)] transition-colors hover:bg-[#17316B] md:inline-flex lg:px-5 lg:text-[13px]"
           >
             <span>{t.nav.cta}</span>
             <Rocket className="h-3.5 w-3.5 -rotate-45 text-white/90" strokeWidth={2.2} />
@@ -97,7 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenDemo }) => {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="grid h-9 w-9 place-items-center rounded-full text-[#22304c] transition-colors hover:bg-[#eef1fb] lg:hidden"
+            className="grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-full text-[#22304c] transition-colors hover:bg-[#eef1fb] lg:hidden"
             aria-label={mobileMenuOpen ? t.nav.menuClose : t.nav.menuOpen}
             aria-expanded={mobileMenuOpen}
           >
