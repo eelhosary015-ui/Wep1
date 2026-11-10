@@ -109,13 +109,15 @@ export const ar = {
   },
 
   modules: {
-    eyebrow: 'منظومة موديولات متكاملة',
-    title: 'موديولات REMO PRO لإدارة أعمالك',
-    desc: 'مجموعة شاملة من الأدوات المترابطة التي تغطي دورات العمل المحاسبية، التجارية، المخزنية، البشرية، والصناعية في بيئة واحدة متسقة.',
-    noticeTitle: 'تنويه حول تخصيص النظام:',
+    eyebrow: 'منظومة متكاملة.. مصممة لتناسب كل الأعمال',
+    title: 'نظام REMO PRO ERP - الحل الإداري والمحاسبي الشامل',
+    desc: 'نظام REMO PRO ERP هو الحل الإداري والمحاسبي الشامل الذي يضع السيطرة الكاملة بين يديك. صُمم النظام بمرونة فائقة ليربط جميع الإدارات والأقسام في منصة واحدة، مما يجعله الخيار الأمثل لمختلف الأنشطة التجارية. سواء كنت تدير محلاً تجارياً، أو تبحث عن تنظيم دقيق للمطاعم والكافيهات، أو تحتاج إلى نظام احترافي لإدارة الاشتراكات في الجيم والنوادي الرياضية؛ فإن نظامنا يتكيف مع طبيعة عملك ليضمن لك إدارة سلسة، نمواً مستمراً، وأداءً فائقاً.',
+    highlightNotice:
+      'نظام REMO PRO ERP هو الحل الإداري والمحاسبي الشامل الذي يضع السيطرة الكاملة بين يديك. صُمم النظام بمرونة فائقة ليربط جميع الإدارات والأقسام في منصة واحدة، مما يجعله الخيار الأمثل لمختلف الأنشطة التجارية. سواء كنت تدير محلاً تجارياً، أو تبحث عن تنظيم دقيق للمطاعم والكافيهات، أو تحتاج إلى نظام احترافي لإدارة الاشتراكات في الجيم والنوادي الرياضية؛ فإن نظامنا يتكيف مع طبيعة عملك ليضمن لك إدارة سلسة، نمواً مستمراً، وأداءً فائقاً.',
+    noticeTitle: 'مرونة فائقة لمختلف الأنشطة:',
     noticeBody:
-      'تختلف الموديولات والتهيئات المناسبة بحسب طبيعة النشاط التجاري (تجزئة، تصنيع، مطاعم، مقاولات، خدمات) وهيكلة العمل في كل منشأة. يتم تفعيل وضبط الموديولات المطلوبة وفق احتياجات العمل الفعلية.',
-    searchPlaceholder: 'ابحث عن موديول أو ميزة (مثل: قيود، جرد، باركود، رواتب)...',
+      'سواء كنت تدير محلاً تجارياً، أو مطعماً وكافيه، أو نادياً رياضياً وجيم، أو مصنعاً وشركة متعددة الفروع؛ يتكيف النظام بالكامل ليلبي تفاصيل عملك بدقة واحترافية.',
+    searchPlaceholder: 'ابحث عن موديول أو ميزة (مثل: نقاط البيع، الاشتراكات، الحسابات، المخازن)...',
     clear: 'مسح',
     coreBadge: 'REMO CORE',
     emptyPrefix: 'لم يتم العثور على موديولات تطابق بحثك: ',
@@ -123,11 +125,11 @@ export const ar = {
     showLess: 'عرض أقل',
     moreDetails: 'تفاصيل إضافية',
     askDiscussion: 'طلب مناقشة',
-    tapHint: 'اضغط على أي موديول لعرض تفاصيله ومزاياه.',
+    tapHint: 'اضغط على أي موديول لعرض تفاصيله ومزاياه التشغيلية.',
     featuresLabel: 'أهم المزايا والوظائف',
     close: 'إغلاق',
-    bottomQuestion: 'هل تحتاج إلى تهيئة محددة تجمع بين موديولات التصنيع والمستودعات أو نقاط البيع؟',
-    bottomCta: 'استشر فريق الحلول لتحديد الموديولات المناسبة',
+    bottomQuestion: 'هل ترغب في تهيئة نظام REMO PRO لمجال نشاطك التجاري تحديداً؟',
+    bottomCta: 'اطلب استشارة مجانية وعرضاً توضيحياً مخصصاً لنشاطك',
   },
 
   integration: {
@@ -571,13 +573,15 @@ export const en: Copy = {
   },
 
   modules: {
-    eyebrow: 'A complete, integrated module suite',
-    title: 'REMO PRO modules for running your business',
-    desc: 'A comprehensive set of connected tools covering accounting, commercial, inventory, human resources and industrial cycles in one consistent environment.',
-    noticeTitle: 'A note on system configuration:',
+    eyebrow: 'An integrated system.. tailored for every business',
+    title: 'REMO PRO ERP - Complete Management & Accounting Solution',
+    desc: 'REMO PRO ERP is the comprehensive management and accounting solution that puts complete control in your hands. Designed with extreme flexibility to connect all departments on a single platform, making it the ideal choice for diverse businesses—whether retail stores, restaurants & cafes, or gym & sports club memberships.',
+    highlightNotice:
+      'REMO PRO ERP is the comprehensive management and accounting solution that puts complete control in your hands. Designed with extreme flexibility to connect all departments on a single platform, making it the ideal choice for diverse commercial activities.',
+    noticeTitle: 'High flexibility across industries:',
     noticeBody:
-      'The right modules and setup depend on your line of business (retail, manufacturing, restaurants, contracting, services) and on how your organisation is structured. Only the modules you actually need are enabled and configured.',
-    searchPlaceholder: 'Search modules or features (journals, barcode, payroll)...',
+      'Whether you run retail stores, restaurants & cafes, sports clubs & gyms, or multi-branch factories; the platform adapts to your operations with precision and ease.',
+    searchPlaceholder: 'Search modules or features (POS, subscriptions, journals, payroll)...',
     clear: 'Clear',
     coreBadge: 'REMO CORE',
     emptyPrefix: 'No modules matched your search: ',
@@ -588,7 +592,7 @@ export const en: Copy = {
     tapHint: 'Tap any module to see its details and features.',
     featuresLabel: 'Key features',
     close: 'Close',
-    bottomQuestion: 'Need a specific setup that combines manufacturing with inventory or point of sale?',
+    bottomQuestion: 'Need a tailored setup matching your exact industry and business model?',
     bottomCta: 'Talk to our solutions team to scope the right modules',
   },
 

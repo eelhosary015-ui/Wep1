@@ -113,30 +113,46 @@ export const ModulesSection: React.FC<ModulesSectionProps> = ({ onOpenDemo }) =>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section Header */}
-        <div className="max-w-3xl mx-auto text-center mb-10">
-          <div className="text-xs font-bold text-blue-700 mb-2">{copy.eyebrow}</div>
-
-          <div className="flex items-center justify-center gap-4 lg:gap-6 mb-4">
-            <span className="hidden sm:block h-px w-12 lg:w-20 bg-gradient-to-r from-transparent to-blue-500/50" aria-hidden="true" />
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight">
-              {copy.title}
-            </h2>
-            <span className="hidden sm:block h-px w-12 lg:w-20 bg-gradient-to-l from-transparent to-blue-500/50" aria-hidden="true" />
+        <div className="max-w-4xl mx-auto text-center mb-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100/80 text-blue-800 text-xs font-bold mb-3 border border-blue-200/60 shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+            <span>{copy.eyebrow}</span>
           </div>
 
-          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-            {copy.desc}
-          </p>
-        </div>
+          <div className="flex items-center justify-center gap-4 lg:gap-6 mb-4">
+            <span className="hidden sm:block h-px w-12 lg:w-24 bg-gradient-to-r from-transparent to-blue-500/50" aria-hidden="true" />
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-950 tracking-tight leading-snug">
+              {copy.title}
+            </h2>
+            <span className="hidden sm:block h-px w-12 lg:w-24 bg-gradient-to-l from-transparent to-blue-500/50" aria-hidden="true" />
+          </div>
 
-        {/* Visual Notice / Disclaimer Alert */}
-        <div className="max-w-4xl mx-auto mb-8 bg-blue-50/80 border border-blue-200 rounded-xl p-4 sm:p-5 flex items-start gap-3.5 text-blue-950 shadow-sm">
-          <Info className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
-          <div className="text-xs sm:text-sm leading-relaxed">
-            <strong className="font-bold text-blue-900 block mb-0.5">
-              {copy.noticeTitle}
-            </strong>
-            {copy.noticeBody}
+          {/* Featured Highlight Card - Styled professionally matching site's high-grade palette */}
+          <div className="mt-6 rounded-2xl bg-gradient-to-br from-white via-blue-50/40 to-indigo-50/30 p-6 sm:p-8 border border-blue-200/80 shadow-[0_12px_32px_-16px_rgba(20,102,232,0.18)] text-start relative overflow-hidden">
+            <div className="absolute top-0 end-0 -mt-8 -me-8 w-40 h-40 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
+            
+            <p className="text-sm sm:text-base lg:text-[16.5px] text-slate-700 leading-relaxed font-medium">
+              {copy.desc}
+            </p>
+
+            {/* Quick Badges for highlighted activities in user request */}
+            <div className="mt-5 pt-4 border-t border-blue-100/80 flex flex-wrap items-center gap-2 sm:gap-3 text-xs">
+              <span className="font-bold text-blue-900 shrink-0">
+                {lang === 'ar' ? 'مهيأ ومثالي لأنشطة:' : 'Optimized for:'}
+              </span>
+              <span className="px-3 py-1 rounded-lg bg-white border border-blue-200 font-bold text-blue-800 shadow-xs">
+                {lang === 'ar' ? '🏪 المحلات التجارية ونقاط البيع' : '🏪 Retail Stores & POS'}
+              </span>
+              <span className="px-3 py-1 rounded-lg bg-white border border-blue-200 font-bold text-blue-800 shadow-xs">
+                {lang === 'ar' ? '☕ المطاعم والكافيهات والإعاشة' : '☕ Restaurants & Cafés'}
+              </span>
+              <span className="px-3 py-1 rounded-lg bg-white border border-blue-200 font-bold text-blue-800 shadow-xs">
+                {lang === 'ar' ? '🏋️‍♂️ الجيم والنوادي الرياضية والاشتراكات' : '🏋️‍♂️ Gyms & Fitness Clubs'}
+              </span>
+              <span className="px-3 py-1 rounded-lg bg-white border border-blue-200 font-bold text-blue-800 shadow-xs">
+                {lang === 'ar' ? '🏢 الشركات والمجموعات والمخازن' : '🏢 Multi-Branch & Warehouses'}
+              </span>
+            </div>
           </div>
         </div>
 

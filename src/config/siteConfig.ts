@@ -32,5 +32,14 @@ export const SITE_CONFIG = {
     modulesAnchor: '#modules',
     sectorsAnchor: '#sectors',
     governanceAnchor: '#governance',
+  },
+
+  // 4. إعدادات بوت التليجرام لاستقبال الطلبات الفورية
+  telegram: {
+    botToken: '9272372634:AAHDDeOgJlraE8aR6MS3K3aV5-y72IawaGU',
+    botUsername: 'REMOpro_Bot',
+    // يتم إرسال الإشعار لجميع المحادثات التي قامت بعمل /start للبوت تلقائياً،
+    // ويمكنك أيضاً وضع Chat ID محدد هنا إذا أردت تثبيت قناة أو جروب معين:
+    targetChatId: '',
   }
 };
