@@ -8,8 +8,8 @@ interface IntroExperienceProps {
   onFinish: () => void;
 }
 
-const INTRO_VIDEO_SD = `${import.meta.env.BASE_URL}intro/remo-pro-intro.mp4`;
-const INTRO_VIDEO_HD = `${import.meta.env.BASE_URL}intro/remo-pro-intro-hd.mp4`;
+const INTRO_VIDEO_SD = `${import.meta.env.BASE_URL}intro/remo-pro-intro-hd.mp4`;
+const INTRO_VIDEO_HD = `${import.meta.env.BASE_URL}intro/remo-pro-intro-ultra.mp4`;
 
 function formatTime(seconds: number): string {
   const safe = Number.isFinite(seconds) && seconds > 0 ? Math.floor(seconds) : 0;
@@ -27,12 +27,14 @@ export const IntroExperience: React.FC<IntroExperienceProps> = ({ onFinish }) =>
   const { t, lang } = useI18n();
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  /* Phones get the light file, larger screens the 1080p master. */
+  /* Detect portrait phones for ambient fill */
   const [isCompact] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     return window.matchMedia('(max-width: 639px)').matches;
   });
-  const videoSrc = isCompact ? INTRO_VIDEO_SD : INTRO_VIDEO_HD;
+
+  /* Always use the Ultra HD video source for crisp, cinema-grade quality */
+  const videoSrc = INTRO_VIDEO_HD;
 
   const [phase, setPhase] = useState<IntroPhase>('video');
   const [progress, setProgress] = useState(0);

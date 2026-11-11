@@ -310,6 +310,22 @@ export const ERP_MODULES_EN: ModuleItem[] = [
     iconName: 'Building',
   },
   {
+    id: 'industry-gym',
+    title: 'Gym & sports clubs management',
+    category: 'industry',
+    categoryLabel: 'Specialised solutions',
+    shortDesc:
+      'End-to-end management for fitness memberships, smart turnstile access gates, trainer sessions, cafeteria and supplement sales.',
+    features: [
+      'Manage monthly and annual subscriptions, renewals and membership freeze options',
+      'Direct integration with smart turnstiles, biometric scanners, RFID cards and mobile QR codes',
+      'Schedule group workout classes and personal training sessions with coaches',
+      'Fast POS for protein smoothies, healthy snacks and supplements linked with inventory',
+      'Automated WhatsApp reminders for upcoming membership renewals and class schedules',
+    ],
+    iconName: 'Dumbbell',
+  },
+  {
     id: 'industry-multibranch',
     title: 'Multi-branch operations, approvals & complaints',
     category: 'industry',
@@ -327,6 +343,20 @@ export const ERP_MODULES_EN: ModuleItem[] = [
 ];
 
 export const SECTORS_EN: SectorItem[] = [
+  {
+    id: 'gym',
+    title: 'Gyms, fitness clubs & sports centres',
+    description:
+      'Smart operations for membership tiers, smart access gates, member attendance, nutrition sales and trainer schedules.',
+    keyFeatures: [
+      'Flexible membership tiers, recurring billing, freezes and installment plans',
+      'Turnstile and access control synchronization with visit tracking',
+      'Trainer commissions, PT schedules and group class booking',
+      'Live retention analytics, churn alerts and peak-hour dashboards',
+    ],
+    imagePath: SECTOR_IMAGES.gym,
+    badge: 'Gym & sports clubs',
+  },
   {
     id: 'distribution',
     title: 'Trade, distribution & supply chains',

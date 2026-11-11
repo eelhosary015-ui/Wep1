@@ -25,6 +25,7 @@ export const MODULE_SHORT_TITLES: Record<Lang, Record<string, string>> = {
     'industry-restaurants': 'المطاعم والكافيهات',
     'industry-hotels': 'الفنادق',
     'industry-real-estate': 'العقارات',
+    'industry-gym': 'الجيم والنوادي الرياضية',
     'industry-multibranch': 'الفروع المتعددة',
   },
   en: {
@@ -47,6 +48,7 @@ export const MODULE_SHORT_TITLES: Record<Lang, Record<string, string>> = {
     'industry-restaurants': 'Restaurants',
     'industry-hotels': 'Hotels',
     'industry-real-estate': 'Real estate',
+    'industry-gym': 'Gym & Sports Clubs',
     'industry-multibranch': 'Multi-branch',
   },
 };

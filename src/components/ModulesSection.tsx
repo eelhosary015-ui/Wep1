@@ -22,6 +22,7 @@ import {
   Hotel,
   Building,
   GitBranch,
+  Dumbbell,
   Search,
   CheckCircle2,
   Info,
@@ -91,6 +92,7 @@ export const ModulesSection: React.FC<ModulesSectionProps> = ({ onOpenDemo }) =>
       case 'Utensils': return <Utensils {...props} />;
       case 'Hotel': return <Hotel {...props} />;
       case 'Building': return <Building {...props} />;
+      case 'Dumbbell': return <Dumbbell {...props} />;
       case 'GitBranch': return <GitBranch {...props} />;
       default: return <Boxes {...props} />;
     }

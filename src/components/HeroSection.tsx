@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowLeft, Cloud, Headphones, ShieldCheck, Zap, type LucideIcon } from 'lucide-react';
-import heroDesk from '../assets/images/hero_banner_desk.jpg';
+import heroDesk from '../assets/images/hero_banner_remo_1794306860888.jpg';
 import { useI18n } from '../i18n/LanguageContext';
 
 interface HeroSectionProps {

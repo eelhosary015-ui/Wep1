@@ -43,8 +43,8 @@ export const ar = {
   },
 
   hero: {
-    brandName: 'REMO PRO',
-    brandAccent: 'ERP',
+    brandName: 'remo pro',
+    brandAccent: '',
     subtitle: 'النظام المحاسبي والإداري الشامل',
     description:
       'حل متكامل لإدارة أعمالك بكفاءة واحترافية .. يلبي جميع احتياجات الشركات والمؤسسات من محاسبة ومخازن ومبيعات ومشتريات وموارد بشرية وغيرها الكثير.',
@@ -54,7 +54,7 @@ export const ar = {
       { id: 'shield', title: 'أمان وموثوقية', subtitle: 'على أعلى مستوى' },
       { id: 'speed', title: 'أداء فائق', subtitle: 'وسرعة عالية' },
     ],
-    ctaPrimary: 'ابدأ رحلتك مع REMO PRO الآن',
+    ctaPrimary: 'ابدأ رحلتك مع remo pro الآن',
     handwriting: 'إدارة أذكى .. لنجاح أكبر',
     imageAlt:
       'مكتب حديث يعرض لوحات تحكم نظام REMO PRO ERP على الحاسب المحمول والتابلت والهاتف',
@@ -238,6 +238,7 @@ export const ar = {
       notes: 'مثال: نود التركيز على ربط 4 مستودعات، ودورة إهلاك الأصول الثابتة، والربط مع نقاط البيع...',
     },
     sectorOptions: [
+      'جيم ونوادي رياضية ولياقة بدنية',
       'تجارة وتوزيع',
       'تصنيع وإنتاج صناعي',
       'مطاعم وكافيهات وإعاشة',
@@ -280,17 +281,17 @@ export const ar = {
       'المبيعات ونقاط البيع POS',
       'المشتريات والمستودعات',
       'الموارد البشرية والرواتب',
-      'التشغيل والتصنيع (BOM)',
+      'الجيم والنوادي الرياضية',
       'المطاعم والفنادق والعقارات',
     ],
     sectorsTitle: 'القطاعات المدعومة',
     sectorLinks: [
+      'الجيم والنوادي ومراكز اللياقة',
       'التجارة والتوزيع وسلاسل الإمداد',
       'المصانع والمنشآت الصناعية',
       'المطاعم والكافيهات والإعاشة',
       'الفنادق ومرافق الضيافة',
       'العقارات وإدارة الأملاك',
-      'المجموعات متعددة الفروع',
     ],
     contactTitle: 'بيانات التواصل الرسمية',
     whatsappSales: 'واتساب مبيعات',
@@ -507,8 +508,8 @@ export const en: Copy = {
   },
 
   hero: {
-    brandName: 'REMO PRO',
-    brandAccent: 'ERP',
+    brandName: 'remo pro',
+    brandAccent: '',
     subtitle: 'The complete accounting & management system',
     description:
       'A fully integrated solution to run your business efficiently and professionally — covering accounting, inventory, sales, purchasing, HR and much more for companies and institutions of every size.',
@@ -518,7 +519,7 @@ export const en: Copy = {
       { id: 'shield', title: 'Security & reliability', subtitle: 'at the highest level' },
       { id: 'speed', title: 'Outstanding performance', subtitle: 'and high speed' },
     ],
-    ctaPrimary: 'Start your journey with REMO PRO now',
+    ctaPrimary: 'Start your journey with remo pro now',
     handwriting: '',
     imageAlt:
       'A modern office desk showing REMO PRO ERP dashboards on a laptop, a tablet and a phone',
