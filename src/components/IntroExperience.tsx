@@ -8,8 +8,8 @@ interface IntroExperienceProps {
   onFinish: () => void;
 }
 
-const INTRO_VIDEO_SD = `${import.meta.env.BASE_URL}intro/remo-pro-intro-hd.mp4`;
-const INTRO_VIDEO_HD = `${import.meta.env.BASE_URL}intro/remo-pro-intro-ultra.mp4`;
+const INTRO_VIDEO_SD = `${import.meta.env.BASE_URL}intro/remo-pro-intro-main.mp4`;
+const INTRO_VIDEO_HD = `${import.meta.env.BASE_URL}intro/remo-pro-intro-main.mp4`;
 
 function formatTime(seconds: number): string {
   const safe = Number.isFinite(seconds) && seconds > 0 ? Math.floor(seconds) : 0;
@@ -33,7 +33,7 @@ export const IntroExperience: React.FC<IntroExperienceProps> = ({ onFinish }) =>
     return window.matchMedia('(max-width: 639px)').matches;
   });
 
-  /* Always use the Ultra HD video source for crisp, cinema-grade quality */
+  /* Use the exact high-definition intro video without any quality reduction */
   const videoSrc = INTRO_VIDEO_HD;
 
   const [phase, setPhase] = useState<IntroPhase>('video');
