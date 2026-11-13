@@ -192,25 +192,28 @@ html[dir='ltr'] .hero-wash {
 }
 
 .intro-film {
-  filter: saturate(1.05) contrast(1.03);
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  filter: saturate(1.04) contrast(1.02);
   transform: translateZ(0);
   backface-visibility: hidden;
-  animation: introFilmIn 1400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: introFilmIn 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* On portrait phones the film is masked into the ambient background */
-@media (max-width: 639px) {
-  .intro-film {
+@media (orientation: portrait) {
+  .intro-film-seamless {
     -webkit-mask-image: linear-gradient(
       to bottom,
       transparent 0%,
-      #000 9%,
-      #000 91%,
+      #000 var(--intro-feather, 0%),
+      #000 calc(100% - var(--intro-feather, 0%)),
       transparent 100%
     );
-    mask-image: linear-gradient(to bottom, transparent 0%, #000 9%, #000 91%, transparent 100%);
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      #000 var(--intro-feather, 0%),
+      #000 calc(100% - var(--intro-feather, 0%)),
+      transparent 100%
+    );
   }
 }
 

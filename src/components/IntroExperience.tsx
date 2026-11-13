@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Play, SkipForward } from 'lucide-react';
 import { useI18n } from '../i18n/LanguageContext';
+import { computePortraitCamera } from '../utils/introCamera';
 
 type IntroPhase = 'video' | 'welcome' | 'exit';
 
@@ -8,7 +9,6 @@ interface IntroExperienceProps {
   onFinish: () => void;
 }
 
-const INTRO_VIDEO_SD = `${import.meta.env.BASE_URL}intro/remo-pro-intro-main.mp4`;
 const INTRO_VIDEO_HD = `${import.meta.env.BASE_URL}intro/remo-pro-intro-main.mp4`;
 
 function formatTime(seconds: number): string {
@@ -20,18 +20,15 @@ function formatTime(seconds: number): string {
 
 /**
  * Full-screen cinematic welcome film shown before the landing page.
- * The film covers the whole viewport, then a short brand card appears
- * and the overlay opens like a curtain to reveal the real site underneath.
+ * The film adapts cleanly between portrait mobile screens (showing the full 16:9 frame
+ * with zero horizontal cropping) and landscape/desktop screens (full-bleed playback),
+ * then displays a short brand card and opens like a curtain to reveal the site.
  */
 export const IntroExperience: React.FC<IntroExperienceProps> = ({ onFinish }) => {
   const { t, lang } = useI18n();
   const videoRef = useRef<HTMLVideoElement | null>(null);
-
-  /* Detect portrait phones for ambient fill */
-  const [isCompact] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia('(max-width: 639px)').matches;
-  });
+  const frameWrapperRef = useRef<HTMLDivElement | null>(null);
+  const ambientCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   /* Use the exact high-definition intro video without any quality reduction */
   const videoSrc = INTRO_VIDEO_HD;
@@ -83,6 +80,94 @@ export const IntroExperience: React.FC<IntroExperienceProps> = ({ onFinish }) =>
     if (video && phase !== 'video') video.pause();
   }, [phase]);
 
+  /* Full-screen portrait camera pan + ambient canvas extension synced to the single video element. */
+  useEffect(() => {
+    if (phase !== 'video') return undefined;
+
+    const video = videoRef.current;
+    const frameWrapper = frameWrapperRef.current;
+    const canvas = ambientCanvasRef.current;
+    if (!video || !frameWrapper || !canvas) return undefined;
+
+    const ctx = canvas.getContext('2d', { alpha: false });
+    const portraitQuery = window.matchMedia('(orientation: portrait)');
+
+    let rafId = 0;
+    let lastAmbientDraw = 0;
+
+    const resetPortraitCamera = () => {
+      video.style.objectPosition = '';
+      frameWrapper.style.height = '';
+      frameWrapper.style.removeProperty('--intro-feather');
+    };
+
+    const tick = (now: number) => {
+      rafId = window.requestAnimationFrame(tick);
+      if (video.readyState < 2 || video.videoWidth === 0 || video.videoHeight === 0) return;
+
+      const isPortrait = portraitQuery.matches;
+      let shouldDrawAmbient = !isPortrait;
+
+      if (isPortrait && Number.isFinite(video.duration) && video.duration > 0) {
+        const { panX, heightPct, featherPct } = computePortraitCamera(video.currentTime / video.duration);
+        video.style.objectPosition = `${panX.toFixed(2)}% 50%`;
+        frameWrapper.style.height = `${heightPct.toFixed(2)}%`;
+        frameWrapper.style.setProperty('--intro-feather', `${featherPct.toFixed(2)}%`);
+        shouldDrawAmbient = featherPct > 0.05;
+      } else {
+        resetPortraitCamera();
+      }
+
+      if (!ctx || !shouldDrawAmbient || now - lastAmbientDraw < 32) return;
+      lastAmbientDraw = now;
+
+      const cw = canvas.width;
+      const ch = canvas.height;
+      const vw = video.videoWidth;
+      const vh = video.videoHeight;
+
+      ctx.fillStyle = '#030712';
+      ctx.fillRect(0, 0, cw, ch);
+
+      const coverScale = Math.max(cw / vw, ch / vh);
+      const dw = vw * coverScale;
+      const dh = vh * coverScale;
+      ctx.globalAlpha = 0.5;
+      ctx.drawImage(video, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+
+      const sliceH = Math.floor(vh * 0.26);
+      const halfCh = Math.ceil(ch * 0.5);
+      ctx.globalAlpha = 0.9;
+
+      ctx.save();
+      ctx.translate(0, halfCh);
+      ctx.scale(1, -1);
+      ctx.drawImage(video, 0, 0, vw, sliceH, 0, 0, cw, halfCh);
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(0, ch);
+      ctx.scale(1, -1);
+      ctx.drawImage(video, 0, vh - sliceH, vw, sliceH, 0, 0, cw, halfCh);
+      ctx.restore();
+
+      ctx.globalAlpha = 1;
+    };
+
+    const handleOrientationChange = () => {
+      if (!portraitQuery.matches) resetPortraitCamera();
+    };
+
+    portraitQuery.addEventListener('change', handleOrientationChange);
+    rafId = window.requestAnimationFrame(tick);
+
+    return () => {
+      portraitQuery.removeEventListener('change', handleOrientationChange);
+      window.cancelAnimationFrame(rafId);
+      resetPortraitCamera();
+    };
+  }, [phase]);
+
   /* Advance the sequence after the brand card. */
   useEffect(() => {
     if (phase === 'welcome') {
@@ -125,58 +210,60 @@ export const IntroExperience: React.FC<IntroExperienceProps> = ({ onFinish }) =>
 
   return (
     <div
-      className={`intro-overlay fixed inset-0 z-[120] overflow-hidden bg-black ${phase === 'exit' ? 'intro-exit' : ''}`}
+      className={`intro-overlay fixed inset-0 z-[120] overflow-hidden bg-[#030712] ${phase === 'exit' ? 'intro-exit' : ''}`}
       role="dialog"
       aria-modal="true"
       aria-label={t.intro.welcome}
       dir={lang === 'ar' ? 'rtl' : 'ltr'}
     >
-      {/* Full-bleed film */}
+      {/* Film stage: true edge-to-edge full screen with live ambient extension + 100% uncropped sharp frame */}
       <div
         className={`absolute inset-0 transition-transform duration-[1400ms] ease-out ${
           phase === 'video' ? 'scale-100' : 'scale-[1.06]'
         }`}
       >
-        {/* Ambient fill for portrait phones: the film itself, blurred, so the screen stays full */}
-        {isCompact && (
-          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        {/* Live ambient video continuation filling 100% of mobile portrait/landscape screens */}
+        <canvas
+          ref={ambientCanvasRef}
+          width={216}
+          height={384}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 h-full w-full scale-110 object-cover brightness-[0.44] saturate-125 blur-2xl lg:hidden"
+        />
+
+        {/* Subtle depth gradient on mobile so ambient glow frames the sharp center naturally */}
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,transparent_24%,rgba(2,6,23,0.52)_76%,rgba(2,6,23,0.88)_100%)] lg:hidden"
+          aria-hidden="true"
+        />
+
+        {/* Main video layer: true 100% full-screen edge-to-edge on portrait mobile with smooth pan, full-bleed on desktop */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div
+            ref={frameWrapperRef}
+            className="intro-film-seamless relative h-full w-full overflow-hidden landscape:h-full landscape:w-full"
+          >
             <video
+              ref={videoRef}
               src={videoSrc}
-              className="h-full w-full scale-125 object-cover opacity-70 blur-3xl saturate-150"
+              className="intro-film h-full w-full object-cover landscape:object-contain lg:landscape:object-cover lg:landscape:object-center"
               autoPlay
               muted
               playsInline
-              loop
-              tabIndex={-1}
               preload="auto"
+              onLoadedMetadata={(event) => setDuration(event.currentTarget.duration || 0)}
+              onCanPlay={() => setVideoReady(true)}
+              onPlaying={() => setVideoReady(true)}
+              onTimeUpdate={handleTimeUpdate}
+              onEnded={beginWelcome}
+              onError={beginWelcome}
             />
-            <div className="absolute inset-0 bg-[#04060c]/45" />
           </div>
-        )}
-
-        <div className="absolute inset-0 flex items-center justify-center sm:block">
-          <video
-            ref={videoRef}
-            src={videoSrc}
-            className="intro-film relative h-[76vh] w-full bg-transparent object-cover object-center sm:absolute sm:inset-0 sm:h-full sm:bg-black"
-            autoPlay
-            muted
-            playsInline
-            preload="auto"
-            onLoadedMetadata={(event) => setDuration(event.currentTarget.duration || 0)}
-            onCanPlay={() => setVideoReady(true)}
-            onPlaying={() => setVideoReady(true)}
-            onTimeUpdate={handleTimeUpdate}
-            onEnded={beginWelcome}
-            onError={beginWelcome}
-          />
         </div>
 
-        {/* Cinematic grading: vignette, top/bottom scrims and fine grain */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,transparent_30%,rgba(2,6,23,0.5)_78%,rgba(2,6,23,0.82)_100%)]" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/65 via-black/20 to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-black/90 via-black/45 to-transparent" />
-        <div className="intro-grain pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-overlay" aria-hidden="true" />
+        {/* Bottom & top soft scrims for control readability without darkening the video center */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#020617]/55 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#020617]/80 via-[#020617]/30 to-transparent" />
       </div>
 
       {/* Loading curtain */}
@@ -221,24 +308,27 @@ export const IntroExperience: React.FC<IntroExperienceProps> = ({ onFinish }) =>
           phase === 'video' ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
       >
-        <div className="px-5 pb-4 sm:px-10 sm:pb-6">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div className="flex flex-col gap-1">
-              <span className="hidden text-[10px] font-semibold uppercase tracking-[0.38em] text-white/40 sm:block">
+        <div className="px-5 pb-4 sm:px-8 sm:pb-4 lg:px-10 lg:pb-6">
+          <div className="flex items-end justify-between gap-4">
+            <div className="hidden flex-col gap-1 lg:flex">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.38em] text-white/40">
                 {t.intro.brandLine}
               </span>
               <span className="text-xs font-semibold tracking-[0.28em] text-white/75">REMO PRO</span>
             </div>
 
-            <div className="flex items-center gap-4 sm:gap-6">
-              <span className="font-mono text-[11px] tracking-[0.18em] text-white/55">
-                {formatTime(elapsed)} <span className="text-white/25">/</span> {formatTime(duration || 10)}
+            <div className="flex w-full items-center justify-between gap-4 lg:w-auto lg:justify-end lg:gap-6">
+              <span
+                dir="ltr"
+                className="font-mono text-[11px] tabular-nums tracking-[0.18em] text-white/65"
+              >
+                {formatTime(elapsed)} <span className="text-white/30">/</span> {formatTime(duration || 10)}
               </span>
 
               <button
                 type="button"
                 onClick={beginWelcome}
-                className="group flex items-center gap-2 rounded-full border border-white/20 bg-black/25 px-4 py-2 text-xs font-semibold text-white/85 backdrop-blur-md transition-all duration-200 hover:border-white/45 hover:bg-white/10 hover:text-white"
+                className="group flex items-center gap-2 rounded-full border border-white/20 bg-black/35 px-4 py-2 text-xs font-semibold text-white/90 backdrop-blur-md transition-all duration-200 hover:border-white/45 hover:bg-white/10 hover:text-white"
               >
                 <span>{t.intro.skip}</span>
                 <SkipForward className="h-3.5 w-3.5 opacity-70 transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
